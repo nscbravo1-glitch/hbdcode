@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🎁 Surprise Gift for P'แพรว</title>
   <style>
     * {
@@ -23,6 +23,7 @@
       perspective: 1000px;
       animation: bgPulse 15s infinite alternate;
       padding: 20px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     @keyframes bgPulse {
@@ -51,6 +52,7 @@
       transition: all 1s ease-out;
       position: relative;
       z-index: 5;
+      -webkit-overflow-scrolling: touch;
     }
 
     .video-wrapper.show {
@@ -62,6 +64,7 @@
       width: 100%;
       display: block;
       background: #000;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .video-controls {
@@ -76,7 +79,8 @@
       transition: opacity 0.3s;
     }
 
-    .video-wrapper:hover .video-controls {
+    .video-wrapper:hover .video-controls,
+    .video-wrapper:active .video-controls {
       opacity: 1;
     }
 
@@ -93,6 +97,7 @@
       justify-content: center;
       font-size: 16px;
       transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .video-btn:hover {
@@ -123,6 +128,7 @@
       transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       transform-style: preserve-3d;
       filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.6));
+      -webkit-tap-highlight-color: transparent;
     }
 
     .gift-box:hover {
@@ -267,7 +273,7 @@
     .message {
       margin-top: 20px;
       font-size: clamp(1.8rem, 7vw, 3.5rem);
-      color: #fff;
+      color: white;
       text-shadow: 0 3px 8px rgba(248, 248, 248, 0.5),
                   0 0 10px rgba(255,255,255,0.5),
                   0 0 20px rgba(255,20,147,0.8);
@@ -282,22 +288,17 @@
       z-index: 10;
     }
 
-   .message-text {
-  background: none;
-  color: #ff1493; /* สีชมพูสด */
-  -webkit-text-fill-color: initial;
-}
+    .message-text {
+      color: white;
+      -webkit-text-fill-color: initial;
+      display: inline-block;
+    }
 
     .message-emoji {
       display: inline-block;
       text-shadow: 0 0 10px rgba(255,255,255,0.7),
                   0 0 20px rgba(255,105,180,0.8);
       filter: drop-shadow(0 0 5px rgba(255,20,147,0.7));
-    }
-
-    @keyframes textShine {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
     }
 
     .open + .message {
@@ -397,14 +398,13 @@
   <div class="main-container">
     <!-- วิดีโอ -->
     <div class="video-wrapper" id="videoWrapper">
-      <video id="birthdayVideo">
+      <video id="birthdayVideo" playsinline webkit-playsinline x-webkit-airplay="allow" muted>
         <source src="vd1.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
       <div class="video-controls">
         <button class="video-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
         <button class="video-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
-        <button class="video-btn" id="fullscreenBtn"><i class="fas fa-expand"></i></button>
       </div>
     </div>
     
@@ -436,12 +436,6 @@
     const birthdayVideo = document.getElementById('birthdayVideo');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    
-    // สีและรูปทรงสำหรับคอนเฟตติ
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', 
-                   '#ff8a00', '#da1b60', '#ff1493', '#00ffaa', '#ff69b4', '#9400d3'];
-    const shapes = ['❤️', '✨', '🌟', '🎉', '🎁', '🥳', '🎂', '🌸'];
     
     // สร้างดาวบนพื้นหลัง
     function createStars() {
@@ -459,31 +453,27 @@
     
     // สร้างคอนเฟตติ
     function createConfetti() {
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+      const shapes = ['❤️', '✨', '🌟', '🎉', '🎁', '🥳', '🎂', '🌸'];
+      
       for (let i = 0; i < 80; i++) {
         setTimeout(() => {
           const confetti = document.createElement('div');
           confetti.className = 'confetti';
           confetti.style.left = Math.random() * 100 + 'vw';
           
-          // สุ่มเลือกรูปทรงหรือสี
           if (Math.random() > 0.7) {
             confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
             confetti.style.fontSize = Math.random() * 20 + 10 + 'px';
             confetti.style.background = 'transparent';
-            confetti.style.width = 'auto';
-            confetti.style.height = 'auto';
           } else {
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
           }
           
           confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
-          confetti.style.animationDelay = Math.random() * 0.5 + 's';
           document.body.appendChild(confetti);
           
-          // ลบคอนเฟตติหลังแสดงผลเสร็จ
-          setTimeout(() => {
-            confetti.remove();
-          }, 5000);
+          setTimeout(() => confetti.remove(), 5000);
         }, Math.random() * 1000);
       }
     }
@@ -495,22 +485,25 @@
         sparkle.className = 'sparkle';
         sparkle.style.left = (event.clientX - 5 + (Math.random() * 40 - 20)) + 'px';
         sparkle.style.top = (event.clientY - 5 + (Math.random() * 40 - 20)) + 'px';
-        sparkle.style.animationDelay = i * 0.05 + 's';
         document.body.appendChild(sparkle);
-        
-        setTimeout(() => {
-          sparkle.remove();
-        }, 1000);
+        setTimeout(() => sparkle.remove(), 1000);
       }
     }
     
-    // การควบคุมวิดีโอ
+    // ควบคุมวิดีโอ
     function setupVideoControls() {
+      // iOS Hack
+      birthdayVideo.setAttribute('playsinline', '');
+      birthdayVideo.setAttribute('webkit-playsinline', '');
+      birthdayVideo.setAttribute('x-webkit-airplay', 'allow');
+      birthdayVideo.muted = true; // iOS ต้องการ muted สำหรับ inline playback
+      
       // เล่น/หยุด
       playPauseBtn.addEventListener('click', () => {
         if (birthdayVideo.paused) {
-          birthdayVideo.play();
-          playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          birthdayVideo.play()
+            .then(() => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>')
+            .catch(e => console.error('Playback failed:', e));
         } else {
           birthdayVideo.pause();
           playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -525,17 +518,6 @@
           : '<i class="fas fa-volume-up"></i>';
       });
       
-      // เต็มหน้าจอ
-      fullscreenBtn.addEventListener('click', () => {
-        if (videoWrapper.requestFullscreen) {
-          videoWrapper.requestFullscreen();
-        } else if (videoWrapper.webkitRequestFullscreen) {
-          videoWrapper.webkitRequestFullscreen();
-        } else if (videoWrapper.msRequestFullscreen) {
-          videoWrapper.msRequestFullscreen();
-        }
-      });
-      
       // อัพเดทปุ่มเมื่อวิดีโอเล่น/หยุด
       birthdayVideo.addEventListener('play', () => {
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -544,22 +526,31 @@
       birthdayVideo.addEventListener('pause', () => {
         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
       });
+      
+      // ป้องกันการเข้า fullscreen บน iOS
+      birthdayVideo.addEventListener('webkitbeginfullscreen', (e) => {
+        e.preventDefault();
+      });
     }
     
     // การทำงานของกล่องของขวัญ
     function setupGiftBox() {
-      gift.addEventListener('click', (event) => {
+      gift.addEventListener('click', async (event) => {
         gift.classList.toggle('open');
         
         if (gift.classList.contains('open')) {
-          // แสดงคอนเฟตติเมื่อเปิดกล่อง
           createConfetti();
-          
-          // แสดงวิดีโอ
           videoWrapper.classList.add('show');
-          birthdayVideo.play().catch(e => console.log('Autoplay blocked:', e));
           
-          // เพิ่มอีโมจิเฉลิมฉลอง
+          // พยายามเล่นวิดีโอ (พร้อม fallback สำหรับ iOS)
+          try {
+            await birthdayVideo.play();
+          } catch (err) {
+            console.log('Autoplay blocked, trying with muted:', err);
+            birthdayVideo.muted = true;
+            await birthdayVideo.play();
+          }
+          
           setTimeout(() => {
             const emojiContainer = document.createElement('span');
             emojiContainer.className = 'message-emoji';
@@ -567,19 +558,15 @@
             message.appendChild(emojiContainer);
           }, 1000);
         } else {
-          // รีเซ็ตข้อความเมื่อปิดกล่อง
           message.innerHTML = `
             <span class="message-text">Happy Birthday P'แพรว</span>
             <span class="message-emoji">🎉</span>
           `;
-          
-          // ซ่อนวิดีโอ
           videoWrapper.classList.remove('show');
           birthdayVideo.pause();
           birthdayVideo.currentTime = 0;
         }
         
-        // สร้างประกายไฟเมื่อคลิก
         createSparkles(event);
       });
     }
@@ -597,9 +584,11 @@
       setupVideoControls();
       setupGiftBox();
       floatBoxEffect();
+      
+      // iOS Safari Hack - ต้องมี user interaction ก่อน
+      document.body.addEventListener('touchstart', function() {}, { once: true });
     }
     
-    // เรียกใช้งานเมื่อหน้าเว็บโหลดเสร็จ
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
